@@ -1,0 +1,41 @@
+/*
+P1802 5倍经验日
+https://www.luogu.com.cn/problem/P1802
+
+题解
+dp问题，在遍历的时候，如果选择输，则要增加输掉会增长的经验值，然后dp进行比较的时候要考虑输掉的经验值。就不会出错了。
+得全遍历一遍，即若此时的药瓶全用上也打不过的时候也要增长输掉的经验值。
+*/
+
+```
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+typedef long long int ll;
+struct node{
+	ll f,w,t;
+}a[1000005];
+
+ll dp[1000005];
+int main()
+{
+	ll n,x;
+	cin>>n>>x;
+	for(ll i=1;i<=n;i++){
+		cin>>a[i].f>>a[i].w>>a[i].t;
+	}
+	for(ll i=1;i<=n;i++){
+		for(ll j=x;j>=a[i].t;j--){
+			if(j>=a[i].t)	dp[j]=max(dp[j]+a[i].f,dp[j-a[i].t]+a[i].w);
+//			else dp[j]+=a[i].f;
+		}
+		for(ll j=a[i].t-1;j>=0;j--){
+			dp[j]+=a[i].f;
+		}
+	}
+	cout<<dp[x]*5<<endl;
+	return 0;
+ } 
+ } 
+```
