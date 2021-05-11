@@ -1,0 +1,62 @@
+/*
+https://www.luogu.com.cn/problem/P4017
+
+题解
+dp加dfs解决。主要是要找到生产者和最高级的消费者。用两个数组来标记，如果可以被吃掉或者可以吃别的物种，分别用两个数组标记下来。
+再进行dfs时，是从最高级消费开始往生产者遍历。于是当遇到有物种吃别人的标记为0时结束。
+最后计算总共的食物链的时候，即将最高级消费者(即没有被吃标记)dfs得到的值累加起来。
+然后是处理同一个捕食者有不同的食物，得将其记录下来。运用并查集。
+*/
+
+```
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+const int mod=80112002;
+int n,m,k;
+struct food{
+	int a,b,next;
+}l[500005];
+
+int dp[50005];
+int visi[50005],viso[50005];
+//visi数组记录该物种被吃过，viso数组记录该物种吃过别的物种 
+int f[500005]; 
+
+int dfs(int x)
+{
+	if(!viso[x]){//若为0，则说明该物种没有吃过别的物种，即为生产者 
+		return 1;
+	} 
+	if(dp[x]){
+		return dp[x];
+	}
+	for(int i=f[x];i;i=l[i].next){
+		dp[x]=(dp[x]+dfs(l[i].a)%mod)%mod;
+	} 
+	return dp[x];
+ } 
+ 
+int main()
+{
+	cin>>n>>m;
+	for(int i=1;i<=m;i++){
+		cin>>l[i].a>>l[i].b;
+		visi[l[i].a]=1,viso[l[i].b]=1;
+		l[i].next=f[l[i].b];//记录同一个捕食者能吃的物种。
+							//用next来记录上一种能吃的物种输入时的位置，直到位置为0时结束。 
+		f[l[i].b]=i;//记录下来最后一次记录了该捕食者的猎物的位置。 
+	}
+	int ans=0;
+	for(int i=1;i<=n;i++){
+		if(!visi[i]){
+//			cout<<ans<<" ";
+			ans+=dfs(i)%mod;
+			ans%=mod;
+		}
+	}
+	cout<<ans<<endl;
+	return 0;
+ } 
+```
