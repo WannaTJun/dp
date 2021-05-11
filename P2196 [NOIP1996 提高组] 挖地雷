@@ -1,0 +1,59 @@
+/*
+题目
+https://www.luogu.com.cn/problem/P2196
+
+题解
+可以用dp或dfs。我用的dp。
+因为没有说固定从哪个点开始挖，所以dp完后要再遍历一遍找到最大值。
+然后递归输出。
+*/
+···
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+int dp[50],map[50][50],f[50],a[50];
+int n;
+
+void pri(int x)
+{
+	if(x==0) return;
+	pri(f[x]);
+	cout<<x<<" ";
+}
+int main()
+{
+	cin>>n;
+	for(int i=1;i<=n;i++){
+		 cin>>a[i];
+		 dp[i]=a[i];
+	}
+	
+	for(int i=1;i<n;i++){
+		for(int j=i+1;j<=n;j++){
+			cin>>map[i][j];
+//			map[j][i]=map[i][j];
+		}
+	}
+	int maxn=0,max_;
+	for(int i=1;i<=n;i++){
+		for(int j=1;j<=n;j++){
+			if(map[j][i]&&dp[i]<dp[j]+a[i]){
+				dp[i]=dp[j]+a[i];
+				f[i]=j;
+			}
+		}
+	}
+	for(int i=1;i<=n;i++){
+		if(dp[i]>maxn){
+			maxn=dp[i];
+			max_=i;
+		}
+	}
+	pri(max_);
+	cout<<endl;
+	cout<<maxn<<endl;
+	return 0;
+}
+···
