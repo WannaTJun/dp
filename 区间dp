@@ -1,0 +1,56 @@
+/*
+一条直线上摆放着一行共n堆的石子。现要将石子有序地合并成一堆。规定每次只能选相邻的两堆合并成新的一堆，并将新的一堆石子数记为该次合并的得分。
+请编辑计算出将n堆石子合并成一堆的最小得分和将n堆石子合并成一堆的最大得分。
+
+输入
+输入有多组测试数据。
+
+每组第一行为n(n<=100)，表示有n堆石子，。
+
+二行为n个用空格隔开的整数，依次表示这n堆石子的石子数量ai（0<ai<=100）
+
+输出
+每组测试数据输出有一行。输出将n堆石子合并成一堆的最小得分和将n堆石子合并成一堆的最大得分。 中间用空格分开。
+
+题解
+区间dp模板题。
+区间 DP 的特点：
+合并：即将两个或多个部分进行整合，当然也可以反过来；
+特征：能将问题分解为能两两合并的形式；
+求解：对整个问题设最优值，枚举合并点，将问题分解为左右两个部分，最后合并两个部分的最优值得到原问题的最优值。
+
+maxn(i,j)表示i到j得分的最大值，minn(i,j)表示i到j得分的最小值。
+*/
+
+```
+#include <iostream>
+#include <algorithm>
+#include <cstring>
+using namespace std;
+
+int a[1005],maxn[1005][1005],minn[1005][1005];
+
+int main() {
+	int n;
+	while(cin>>n) {
+		for(int i=1; i<=n; i++) {
+			cin>>a[i];
+			a[i]=a[i]+a[i-1];
+		}
+		memset(maxn,0,sizeof(maxn));
+		memset(minn,0,sizeof(minn));
+		for(int k=1; k<=n; k++) {
+			for(int i=1; i<=n-k; i++) {
+				minn[i][i+k]=99999999;
+				maxn[i][i+k]=-1;
+				for(int j=i; j<=i+k-1; j++) {
+					maxn[i][i+k]=max(maxn[i][i+k],maxn[i][j]+maxn[j+1][i+k]+a[i+k]-a[i-1]);
+					minn[i][i+k]=min(minn[i][i+k],minn[i][j]+minn[j+1][i+k]+a[i+k]-a[i-1]);
+				}
+			}
+		}
+		cout<<minn[1][n]<<" "<<maxn[1][n]<<endl;
+	}
+	return 0;
+}
+```
