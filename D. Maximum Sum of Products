@@ -1,0 +1,51 @@
+/*
+题目
+https://codeforces.com/problemset/problem/1519/D
+
+题解
+题目的意思是将第一个数组的某个子数组反转一下，输出能得到最大的整个数组相同位置的数相乘的和。
+定义一个二维dp数组，来进行反转后的最大值的遍历。
+因为在最后，进行和的最大值的判断时，需要没有反转的部分的值，所以需要一个前缀和数组。
+dp[l][r]代表的是，l到r这个部分反转得到的值,i代表的是，r-l+1的值。
+因为是dp，前者会影响后者，这样能在进行后面的循环时保证前面的全是更新完的dp数组。
+dp完后就直接运用前缀和进行最大值的判断即可。
+*/
+
+```
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+const int maxn=5005;
+typedef long long int ll;
+
+ll dp[maxn][maxn],sum[maxn];
+ll a[maxn],b[maxn];
+
+int main() {
+	int n;
+	cin>>n;
+	for(int i=1; i<=n; i++) {
+		cin>>a[i];
+	}
+	for(int i=1; i<=n; i++) {
+		cin>>b[i];
+		dp[i][i]=a[i]*b[i];
+		sum[i]=sum[i-1]+dp[i][i];
+	}
+	for(int i=2; i<=n; i++) {//i决定的是下面dp的子区间的间隔 
+		int l=1;
+		for(int r=i; r<=n; r++,l++) {
+			dp[l][r]=dp[l+1][r-1]+a[l]*b[r]+a[r]*b[l];
+		}
+	}
+	ll ans=sum[n];
+	for(int i=1; i<=n; i++) {
+		for(int j=i+1; j<=n; j++) {
+			ans=max(ans,dp[i][j]+sum[i-1]+sum[n]-sum[j]);
+		}
+	}
+	cout<<ans<<endl;
+	return 0;
+}
+```
