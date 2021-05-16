@@ -14,47 +14,41 @@ https://www.51nod.com/Challenge/Problem.html#problemId=2602
 using namespace std;
 const int maxn=1000505*2;
 
-struct node{
+struct node {
 	int x,next;
-}a[maxn];
+} a[maxn];
 
 int head[maxn],dp[maxn];
 int idx,res;
-void add(int x,int y)
-{
+void add(int x,int y) {
 	a[idx].x=y;
 	a[idx].next=head[x];
 	head[x]=idx;
 	idx++;
 }
 
-int dfs(int x,int f)
-{
+int dfs(int x,int f) {
 	dp[x]=0;
 	int m1=0,m2=0;
-	for(int i=head[x];~i;i=a[i].next)
-	{
+	for(int i=head[x]; ~i; i=a[i].next) {
 		int tmp=a[i].x;
 		if(tmp==f)continue;
-        dfs(tmp,x); 
-        if(dp[tmp]+1>m1)
-		{
-            m2=m1;
-            m1=dp[tmp]+1;
-        }
-		else if(dp[tmp]+1> m2)
-		 m2=dp[tmp]+1;
-    }
-    dp[x]=m1;
-    res=max(res,m1+m2);
-    return m1+m2;
+		dfs(tmp,x);
+		if(dp[tmp]+1>m1) {
+			m2=m1;
+			m1=dp[tmp]+1;
+		} else if(dp[tmp]+1> m2)
+			m2=dp[tmp]+1;
+	}
+	dp[x]=m1;
+	res=max(res,m1+m2);
+	return m1+m2;
 }
-int main()
-{
+int main() {
 	int n;
 	cin>>n;
 	memset(head,-1,sizeof(head));
-	for(int i=1;i<n;i++){
+	for(int i=1; i<n; i++) {
 		int x,y;
 		cin>>x>>y;
 		add(x,y);
