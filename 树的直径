@@ -3,7 +3,8 @@
 https://www.51nod.com/Challenge/Problem.html#problemId=2602
 
 题解
-
+给出的是无向边，所以在放入的时候将两个方向都放入。
+然后遍历得到最大和次大，进行更新即可。
 * /
 
 ```
@@ -32,7 +33,7 @@ int dfs(int x,int f) {
 	int m1=0,m2=0;
 	for(int i=head[x]; ~i; i=a[i].next) {
 		int tmp=a[i].x;
-		if(tmp==f)continue;
+		if(tmp==f)continue;//重复的遍历
 		dfs(tmp,x);
 		if(dp[tmp]+1>m1) {
 			m2=m1;
