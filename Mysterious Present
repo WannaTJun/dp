@@ -1,0 +1,84 @@
+/*
+题目
+https://vjudge.net/problem/CodeForces-4D
+
+题解
+需要一点贪心，因为明信片有长和宽，所以可以先根据宽，将其从小到大进行排序，然后再根据高来进行dp。
+因为需要输出明信片的顺序，所以需要用结构体来记录下标。
+然后在每一轮dp之后更新当前遍历的i的下标。因为最优解只有一个，所以不会冲突。
+最后运用递归输出明信片。
+最后判断的时候，如果一张明信片都存不进去，则直接输出0即可。
+*/
+
+···
+#include <iostream>
+#include <algorithm>
+#include <cstring>
+using namespace std;
+const int maxn=50005;
+struct node{
+	int w,h;
+	int set;
+}a[maxn];
+
+bool cmp(struct node x,struct node y)
+{
+	if(x.w==y.w) return x.h<y.h;
+	return x.w<y.w;
+}
+
+int dp[maxn],head[maxn];
+
+void print(int x)
+{
+	if(head[x]==0){
+		cout<<a[x].set<<" ";
+		return;
+	}
+	print(head[x]);
+	cout<<a[x].set<<" ";
+}
+
+int main()
+{
+	int n,w,h;
+	cin>>n>>w>>h;
+	int idx=0;
+	for(int i=1;i<=n;i++){
+		dp[i]=1;
+		int x,y;
+		cin>>x>>y;
+		if(x>w&&y>h){
+			a[++idx].w=x;
+			a[idx].h=y;
+			a[idx].set=i;
+		}
+	}
+	sort(a+1,a+1+idx,cmp);
+	int st;
+	for(int i=2;i<=idx;i++){
+		st=0;
+		for(int j=i-1;j>0;j--){
+			if(a[i].w>a[j].w&&a[i].h>a[j].h&&dp[j]>dp[st]){
+				st=j;
+			}
+		}
+			dp[i]=dp[st]+1;
+			head[i]=st;
+	}
+	int ans=0;
+	int max_;
+	for(int i=1;i<=n;i++){
+		if(dp[i]>ans){
+			ans=dp[i];
+			max_=i;
+		}
+	}
+//	for(int i=1;i<=idx;i++)cout<<head[i]<<' ';
+//	cout<<endl;
+	if(idx)cout<<ans<<endl;
+	else cout<<0<<endl;
+	if(idx)	print(max_);
+	return 0;
+}
+···
